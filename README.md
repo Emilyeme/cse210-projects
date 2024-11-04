@@ -1,5 +1,5 @@
 # cse210-ww-student-template
-This is the starter code for students in the worldwide content version of CSE 210.
+I am Emily Emerson Cotrida N a student at Brigham Young Universty . I am persuring Software Development.
 
 This repository contains the starter code for many different projects. They are arranged as follows:
 
