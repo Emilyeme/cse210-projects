@@ -6,12 +6,15 @@ class Program
     {
       Journal journal = new Journal();
 
-      string[] prompts ={
+      string[] prompts ={// added three new prompts
         "Who was the most intresting person I interacted with toaday?",
         "What was the best part of my day?",
         "How did I see the hand of the Lord in my life today?",
         "What was the strongest emotion I felt today?",
-        "If I had one thing I could do over today, what would it be?"
+        "If I had one thing I could do over today, what would it be?",
+        "What are your hobbies atleast 3?",
+        "What is your favourite sport",
+        "When was the last time you read scriptures"
       }; 
 
       while (true)

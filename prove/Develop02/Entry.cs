@@ -1,7 +1,7 @@
 using System;
 
 public class Entry
-{
+{// added two new fields
     public string _date;
     public string _prompt;
     public string _response;

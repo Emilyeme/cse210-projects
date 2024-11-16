@@ -25,12 +25,13 @@ public class Journal
             }
         }
     }
+    // method to save the journal entries to a CSV file
     public void SaveToFile(string filename)
     {
         try
         {
             using (StreamWriter writer = new StreamWriter(filename))
-            {
+            {// write the header row to the CSV file
                 writer.WriteLine("Date,Prompt,Response,Location,Mood");
 
                 foreach (var entry in Entries)
