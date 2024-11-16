@@ -4,34 +4,51 @@ using System.IO;
 
 public class Journal
 {
-    public List<Entry> Entries {get; set;} = new List<Entry>();
+    public List<Entry> Entries { get; set; } = new List<Entry>();
 
-    public void AddEntry(Entry entry){
+    public void AddEntry(Entry entry)
+    {
         Entries.Add(entry);
     }
 
     public void DisplayEntries()
     {
-        if (Entries.Count ==0){
-            Console.WriteLine("Don't worry entries in the journal.");
+        if (Entries.Count == 0)
+        {
+            Console.WriteLine("Don't worry, no entries in the journal.");
         }
-        else{
-            foreach(var entry in Entries){
+        else
+        {
+            foreach (var entry in Entries)
+            {
                 Console.WriteLine(entry);
             }
         }
     }
-
-
     public void SaveToFile(string filename)
     {
-        using (StreamWriter writer = new StreamWriter(filename)){
-            foreach(var entry in Entries){
-                writer.WriteLine($"{entry.Date}|{entry.Prompt}|{entry.Response}");
-            }
-        }
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(filename))
+            {
+                writer.WriteLine("Date,Prompt,Response,Location,Mood");
 
-        Console.WriteLine($"Journal saved to {filename}.");
+                foreach (var entry in Entries)
+                {
+                    string response = EscapeCsv(entry.Response);
+                    string prompt = EscapeCsv(entry.Prompt);
+                    string location = EscapeCsv(entry.Location);
+                    string mood = EscapeCsv(entry.Mood);
+
+                    writer.WriteLine($"{entry.Date},{prompt},{response},{location},{mood}");
+                }
+            }
+            Console.WriteLine($"Journal saved to {filename}.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving file: {ex.Message}");
+        }
     }
     public void LoadFromFile(string filename)
     {
@@ -41,19 +58,49 @@ public class Journal
             using (StreamReader reader = new StreamReader(filename))
             {
                 string line;
+                bool firstLine = true;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    string[] parts = line.Split('|');
-                    if (parts.Length == 3){
-                        Entries.Add(new Entry(parts[0], parts[1], parts[2]));
+                    if (firstLine)
+                    {
+                        firstLine = false; 
+                        continue;
+                    }
+
+            
+                    string[] parts = line.Split(',');
+                    if (parts.Length == 5)
+                    {
+                        string date = parts[0];
+                        string prompt = parts[1];
+                        string response = parts[2];
+                        string location = parts[3];
+                        string mood = parts[4];
+
+                        Entries.Add(new Entry(date, prompt, response, location, mood));
                     }
                 }
             }
             Console.WriteLine($"Journal loaded from {filename}.");
         }
-        catch ( Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error loading file: {ex.Message}");
         }
+    }
+
+    public string EscapeCsv(string value)
+    {
+        if (value.Contains("\""))
+        {
+            value = value.Replace("\"", "\"\"");
+        }
+
+        if (value.Contains(","))
+        {
+            value = $"\"{value}\"";
+        }
+
+        return value;
     }
 }
