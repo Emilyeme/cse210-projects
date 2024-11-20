@@ -48,7 +48,7 @@ class Program
                     break;  
             case "2" :
                  journal.DisplayEntries();
-                    Console.WriteLine("Press Enter to continue...");
+                    Console.WriteLine("Press Ent er to continue...");
                     Console.ReadLine();
                     break;
             case "3":
