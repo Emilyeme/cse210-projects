@@ -4,7 +4,6 @@ using System.IO;
 
 public class GoalManager
 {
-    
     private List<Goal> _goals;
     private int _score;
 
@@ -14,13 +13,11 @@ public class GoalManager
         _score = 0;
     }
 
-  
     public void Start()
     {
         // Placeholder for initialization logic
     }
 
-   
     public void DisplayPlayerInfo()
     {
         Console.WriteLine($"Total Score: {_score}");
@@ -30,7 +27,6 @@ public class GoalManager
         }
     }
 
-    
     public void ListGoalNames()
     {
         foreach (Goal goal in _goals)
@@ -39,7 +35,7 @@ public class GoalManager
         }
     }
 
-       public void SaveGoals()
+    public void SaveGoals()
     {
         using (StreamWriter writer = new StreamWriter("goals.txt"))
         {
@@ -51,7 +47,6 @@ public class GoalManager
         }
     }
 
-    
     public void LoadGoals()
     {
         if (File.Exists("goals.txt"))
@@ -63,98 +58,102 @@ public class GoalManager
                 {
                     if (line.StartsWith("Score:"))
                     {
-                        _score = int.Parse(line.Substring(6)); 
+                        _score = int.Parse(line.Substring(6));
                     }
                     else
                     {
                         string[] goalData = line.Split(':');
-                        string goalName = goalData[0];
-                        string goalDescription = goalData[1];
-                        int goalPoints = int.Parse(goalData[2]);
+                        string goalName = goalData[0].Trim();
+                        string goalDescription = goalData[1].Trim();
+                        int goalPoints = int.Parse(goalData[2].Trim());
 
-                        _goals.Add(new SimpleGoal(goalName, goalDescription, goalPoints));
+                        if (line.Contains("Simple Goal"))
+                        {
+                            _goals.Add(new SimpleGoal(goalName, goalDescription, goalPoints));
+                        }
+                        else if (line.Contains("Eternal Goal"))
+                        {
+                            _goals.Add(new EternalGoal(goalName, goalDescription, goalPoints));
+                        }
+                        else if (line.Contains("Checklist Goal"))
+                        {
+                            // Parse ChecklistGoal-specific data here
+                        }
+                        else if (line.Contains("Progressive Goal"))
+                        {
+                            // Parse ProgressiveGoal-specific data here
+                        }
                     }
                 }
             }
         }
     }
 
-   
-   public void CreateGoal()
-{
-    Console.WriteLine("Enter the name of the goal:");
-    string name = Console.ReadLine();
-    Console.WriteLine("Enter the description of the goal:");
-    string description = Console.ReadLine();
-    Console.WriteLine("Enter the points for this goal:");
-    int points = int.Parse(Console.ReadLine());
+    public void CreateGoal()
+    {
+        Console.WriteLine("Enter the name of the goal:");
+        string name = Console.ReadLine();
+        Console.WriteLine("Enter the description of the goal:");
+        string description = Console.ReadLine();
+        Console.WriteLine("Enter the points for this goal:");
+        int points = int.Parse(Console.ReadLine());
 
-    Console.WriteLine("What type of goal is this?");
-    Console.WriteLine("1. Simple Goal");
-    Console.WriteLine("2. Eternal Goal");
-    Console.WriteLine("3. Checklist Goal");
-    Console.WriteLine("4. Progressive Goal");
-    Console.WriteLine("5. Negative Goal");
+        Console.WriteLine("What type of goal is this?");
+        Console.WriteLine("1. Simple Goal");
+        Console.WriteLine("2. Eternal Goal");
+        Console.WriteLine("3. Checklist Goal");
+        Console.WriteLine("4. Progressive Goal");
 
-    string goalType = Console.ReadLine();
-    Goal newGoal = null;
+        string goalType = Console.ReadLine();
+        Goal newGoal = null;
 
-    if (goalType == "1")
-    {
-        newGoal = new SimpleGoal(name, description, points);
-    }
-    else if (goalType == "2")
-    {
-        newGoal = new EternalGoal(name, description, points);
-    }
-    else if (goalType == "3")
-    {
-        Console.WriteLine("Enter the target number of completions:");
-        int target = int.Parse(Console.ReadLine());
-        Console.WriteLine("Enter the bonus points for completing the goal:");
-        int bonus = int.Parse(Console.ReadLine());
-        newGoal = new ChecklistGoal(name, description, points, target, bonus);
-    }
-    else if (goalType == "4")
-    {
-        Console.WriteLine("Enter the target for this progressive goal:");
-        int target = int.Parse(Console.ReadLine());
-        Console.WriteLine("Enter a description of the progress being made:");
-        string progressDescription = Console.ReadLine();
-        newGoal = new ProgressiveGoal(name, description, points, target, progressDescription);
-    }
-    else if (goalType == "5")
-    {
-        Console.WriteLine("Enter the penalty amount for this negative goal:");
-        int penaltyAmount = int.Parse(Console.ReadLine());
-        Console.WriteLine("Enter the reason for the penalty:");
-        string reasonForPenalty = Console.ReadLine();
-        newGoal = new NegativeGoal(name, description, points, penaltyAmount, reasonForPenalty);
+        if (goalType == "1")
+        {
+            newGoal = new SimpleGoal(name, description, points);
+        }
+        else if (goalType == "2")
+        {
+            newGoal = new EternalGoal(name, description, points);
+        }
+        else if (goalType == "3")
+        {
+            Console.WriteLine("Enter the target number of completions:");
+            int target = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter the bonus points for completing the goal:");
+            int bonus = int.Parse(Console.ReadLine());
+            newGoal = new ChecklistGoal(name, description, points, target, bonus);
+        }
+        else if (goalType == "4")
+        {
+            Console.WriteLine("Enter the target for this progressive goal:");
+            int target = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter a description of the progress being made:");
+            string progressDescription = Console.ReadLine();
+            newGoal = new ProgressiveGoal(name, description, points, target, progressDescription);
+        }
+
+        _goals.Add(newGoal);
     }
 
-    _goals.Add(newGoal);
-}
-
-
-public void RecordEvent(string goalName)
-{
-    Goal goal = _goals.Find(g => g.GetStringRepresentation() == goalName);
-    if (goal != null)
+    public void RecordEvent(string goalName)
     {
-    goal.RecordEvent();
-    if (goal.IsComplete())
-    {
-        _score += goal.GetPoints(); 
-        Console.WriteLine($"Goal '{goalName}' is now complete!");
-    }
-    else
-    {
-        Console.WriteLine($"Progress recorded for '{goalName}'.");
-    }
-    }
-    else
-    {
-        Console.WriteLine("Goal not found.");
-    }
+        Goal goal = _goals.Find(g => g.GetStringRepresentation() == goalName);
+        if (goal != null)
+        {
+            goal.RecordEvent();
+            if (goal.IsComplete())
+            {
+                _score += goal.GetPoints();
+                Console.WriteLine($"Goal '{goalName}' is now complete and {goal.GetPoints()} points are awarded!");
+            }
+            else
+            {
+                Console.WriteLine($"Progress recorded for '{goalName}'.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Goal not found.");
+        }
     }
 }

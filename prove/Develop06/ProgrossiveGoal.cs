@@ -4,7 +4,7 @@ public class ProgressiveGoal : Goal
     private int _target;
     private string _progressDescription;
 
-    public ProgressiveGoal(string name, string description, int points, int target, string progressDescription) 
+    public ProgressiveGoal(string name, string description, int points, int target, string progressDescription)
         : base(name, description, points)
     {
         _currentProgress = 0;

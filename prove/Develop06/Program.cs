@@ -1,12 +1,11 @@
 using System;
-// added two more goal progressivegoal to track increase in progress and
-//and negative goals which penalizes bad habits
+
 public class Program
-{
+{ //formed progressive goals which records your progress
+
     public static void Main()
     {
         GoalManager goalManager = new GoalManager();
-
         goalManager.LoadGoals();
 
         bool running = true;
