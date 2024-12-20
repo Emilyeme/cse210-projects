@@ -1,5 +1,5 @@
 using System;
-// added two more goal progressivegoal to track increas in progress and
+// added two more goal progressivegoal to track increase in progress and
 //and negative goals which penalizes bad habits
 public class Program
 {

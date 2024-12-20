@@ -14,7 +14,7 @@ public class NegativeGoal : Goal
     public override void RecordEvent()
     {
         _points -= _penaltyAmount;  
-        Console.WriteLine($"Penalty applied: {_reasonForPenalty}. {points} points deducted.");
+        Console.WriteLine($"Penalty applied: {_reasonForPenalty}. {_points} points deducted.");
     }
 
     
